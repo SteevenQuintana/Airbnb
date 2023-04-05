@@ -1,17 +1,20 @@
 'use client'
-import { signIn } from 'next-auth/react'
-import { AiFillGithub } from 'react-icons/ai'
-import { FcGoogle } from 'react-icons/fc'
+
 import { useCallback, useState } from 'react'
-import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
-import Modal from './Modal'
-import Heading from '../Heading'
-import Input from '../inputs/Input'
 import { toast } from 'react-hot-toast'
-import Button from '../Button'
-import useLoginModal from '@/app/hooks/useLoginModal'
-import useRegisterModal from '@/app/hooks/useRegisterModal'
+import { signIn } from 'next-auth/react'
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
+import { FcGoogle } from 'react-icons/fc'
+import { AiFillGithub } from 'react-icons/ai'
 import { useRouter } from 'next/navigation'
+
+import useRegisterModal from '@/app/hooks/useRegisterModal'
+import useLoginModal from '@/app/hooks/useLoginModal'
+
+import Modal from './Modal'
+import Input from '../inputs/Input'
+import Heading from '../Heading'
+import Button from '../Button'
 
 const LoginModal = () => {
   const router = useRouter()
@@ -51,6 +54,11 @@ const LoginModal = () => {
     })
   }
 
+  const onToggle = useCallback(() => {
+    loginModal.onClose()
+    registerModal.onOpen()
+  }, [loginModal, registerModal])
+
   const bodyContent = (
     <div className='flex flex-col gap-4'>
       <Heading title='Welcome back' subtitle='Login to your account!' />
@@ -81,33 +89,30 @@ const LoginModal = () => {
         outline
         label='Continue with Google'
         icon={FcGoogle}
-        onClick={() => {}}
+        onClick={() => signIn('google')}
       />
       <Button
         outline
         label='Continue with Github'
         icon={AiFillGithub}
-        onClick={() => {}}
+        onClick={() => signIn('github')}
       />
       <div
         className='
-          text-neutral-500 
-          text-center 
-          mt-4 
-          font-light
-        '
+      text-neutral-500 text-center mt-4 font-light'
       >
         <p>
-          Already have an account?{' '}
+          First time using Airbnb?
           <span
-            onClick={loginModal.onClose}
+            onClick={onToggle}
             className='
               text-neutral-800
               cursor-pointer 
               hover:underline
             '
           >
-            Log in
+            {' '}
+            Create an account
           </span>
         </p>
       </div>
